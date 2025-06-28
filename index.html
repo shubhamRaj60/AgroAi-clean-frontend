@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌱 AgroAI Dashboard</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      background-color: #f1f8e9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      min-height: 200px;
+    }
+    .sensor-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    footer {
+      background-color: #388e3c;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">🌿 AgroAI</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navLinks">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html"><i class="bi bi-house"></i> Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="chart.html"><i class="bi bi-graph-up-arrow"></i> Charts</a></li>
+          <li class="nav-item"><a class="nav-link" href="suggest.html"><i class="bi bi-lightbulb"></i> Suggest Crop</a></li>
+          <li class="nav-item"><a class="nav-link" href="feedback.html"><i class="bi bi-chat-dots"></i> Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mt-5">
+    <h2 class="text-success mb-4">📊 Live AgroAI Dashboard</h2>
+
+    <div class="row g-4">
+      <!-- Temperature -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card text-center p-3">
+          <div class="card-body">
+            <div class="sensor-icon text-danger"><i class="bi bi-thermometer-half"></i></div>
+            <h5 class="card-title">Temperature</h5>
+            <p class="card-text fs-4" id="temperature">-- °C</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Moisture -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card text-center p-3">
+          <div class="card-body">
+            <div class="sensor-icon text-primary"><i class="bi bi-droplet-fill"></i></div>
+            <h5 class="card-title">Moisture</h5>
+            <p class="card-text fs-4" id="moisture">-- %</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TDS -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card text-center p-3">
+          <div class="card-body">
+            <div class="sensor-icon text-warning"><i class="bi bi-beaker"></i></div>
+            <h5 class="card-title">TDS</h5>
+            <p class="card-text fs-4" id="tds">-- ppm</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pump Status -->
+      <div class="col-md-6 col-lg-3">
+        <div class="card text-center p-3">
+          <div class="card-body">
+            <div class="sensor-icon text-success"><i class="bi bi-water"></i></div>
+            <h5 class="card-title">Pump Status</h5>
+            <p class="card-text fs-4" id="pumpStatus">--</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crop Suggestion -->
+    <div class="alert alert-success text-center mt-4 d-none" id="cropSuggestion">
+      🌾 Suggested Crop: <strong id="cropName">--</strong>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container" style="z-index: 1080;"></div>
+
+  <!-- Footer -->
+  <footer class="text-white text-center py-3">
+    AgroAI © 2025 | Empowering Agriculture with Intelligence 🌾
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

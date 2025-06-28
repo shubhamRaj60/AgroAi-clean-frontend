@@ -1,0 +1,51 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.card-title {
+  font-size: 1.2rem;
+}
+
+canvas {
+  max-width: 100%;
+}
+body {
+  font-family: 'Ubuntu', sans-serif;
+  background: linear-gradient(to bottom right, #e6f5ea, #d9f2ff);
+  color: #222;
+  scroll-behavior: smooth;
+}
+
+.navbar .nav-link {
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: #fff !important;
+  text-decoration: underline;
+}
+
+.card.glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card.glass:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+footer {
+  font-size: 0.9rem;
+}
+
+/* Optional Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #4caf50;
+  border-radius: 10px;
+}

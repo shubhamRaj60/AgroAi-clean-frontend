@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📊 AgroAI - Sensor Charts</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-agro d-flex flex-column min-vh-100 text-dark">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">🌾 AgroAI</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto d-flex gap-3">
+          <li class="nav-item"><a class="nav-link" href="index.html">🏠 Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link active" href="chart.html">📈 Charts</a></li>
+          <li class="nav-item"><a class="nav-link" href="suggest.html">🌿 Suggestions</a></li>
+          <li class="nav-item"><a class="nav-link" href="feedback.html">📩 Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container py-5 flex-grow-1">
+    <h2 class="text-center mb-4 fw-bold text-success">📊 Live Sensor Charts</h2>
+
+    <!-- Dropdown -->
+    <div class="mb-4 text-center">
+      <label for="dataRange" class="form-label fw-bold">🔍 Select Data Range:</label>
+      <select id="dataRange" class="form-select w-auto mx-auto">
+        <option value="5">Last 5 Entries</option>
+        <option value="10" selected>Last 10 Entries</option>
+        <option value="15">Last 15 Entries</option>
+      </select>
+    </div>
+
+    <div class="row g-4">
+      <!-- Moisture -->
+      <div class="col-md-4">
+        <div class="card glass border-success shadow h-100">
+          <div class="card-body">
+            <h5 class="card-title text-success fw-semibold">🌱 Moisture</h5>
+            <canvas id="moistureChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Temperature -->
+      <div class="col-md-4">
+        <div class="card glass border-danger shadow h-100">
+          <div class="card-body">
+            <h5 class="card-title text-danger fw-semibold">🌡 Temperature</h5>
+            <canvas id="temperatureChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- TDS -->
+      <div class="col-md-4">
+        <div class="card glass border-primary shadow h-100">
+          <div class="card-body">
+            <h5 class="card-title text-primary fw-semibold">🧪 TDS</h5>
+            <canvas id="tdsChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-success text-white text-center py-3 mt-auto">
+    <div class="container">
+      <p class="mb-0">© 2025 AgroAI | Smart Agriculture Dashboard 🌿</p>
+    </div>
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/chart.js"></script>
+
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

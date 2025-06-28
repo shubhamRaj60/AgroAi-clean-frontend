@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🌾 AgroAI - Smart Crop Suggestion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <style>
+    body {
+      font-family: 'Ubuntu', sans-serif;
+      background: linear-gradient(to bottom right, #e8f5e9, #d0f0fc);
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      transition: box-shadow 0.3s;
+    }
+    .glass-card:hover {
+      box-shadow: 0 16px 48px rgba(39, 174, 96, 0.18);
+    }
+
+    .result-badge {
+      font-size: 1.2rem;
+      transition: 0.4s ease;
+    }
+
+    .result-badge.animated {
+      animation: bounce 1s;
+    }
+    .result-badge.glow {
+      box-shadow: 0 0 16px 4px #27ae60, 0 0 8px 2px #fff;
+      animation: glow 1s ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    @keyframes glow {
+      0% { box-shadow: 0 0 0 0 #27ae60; }
+      50% { box-shadow: 0 0 16px 4px #27ae60, 0 0 8px 2px #fff; }
+      100% { box-shadow: 0 0 0 0 #27ae60; }
+    }
+
+    table tbody tr {
+      transition: background 0.3s ease;
+    }
+    table tbody tr:hover {
+      box-shadow: 0 4px 16px rgba(39, 174, 96, 0.10);
+      background: #e8f5e9 !important;
+      transition: box-shadow 0.3s, background 0.3s;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">🌾 AgroAI</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto d-flex gap-3">
+          <li class="nav-item"><a class="nav-link" href="index.html">🏠 Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="chart.html">📈 Charts</a></li>
+          <li class="nav-item"><a class="nav-link active" href="suggest.html">🌾 Suggest</a></li>
+          <li class="nav-item"><a class="nav-link" href="feedback.html">📩 Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container my-5">
+    <h2 class="text-center mb-4 text-success fw-bold">🌿 Smart Crop Suggestion Based on Soil Data</h2>
+
+    <div class="mx-auto glass-card" style="max-width: 500px;">
+      <div class="mb-3">
+        <label for="ph" class="form-label">pH Level</label>
+        <input type="number" step="0.1" id="ph" class="form-control" placeholder="e.g., 6.5">
+      </div>
+
+      <div class="mb-3">
+        <label for="moistureInput" class="form-label">Moisture (%)</label>
+        <input type="number" id="moistureInput" class="form-control" placeholder="e.g., 60">
+      </div>
+
+      <div class="mb-3">
+        <label for="tempInput" class="form-label">Temperature (°C)</label>
+        <input type="number" id="tempInput" class="form-control" placeholder="e.g., 28">
+      </div>
+
+      <button onclick="suggestCrop()" class="btn btn-success w-100 mb-3 fw-bold">🌾 Suggest Crop</button>
+
+      <div class="text-center">
+        <p class="mb-1 fw-semibold">Suggested Crop:</p>
+        <span id="suggestedCrop" class="badge bg-secondary result-badge">--</span>
+        <p class="mt-2 text-muted small" id="reasonText"></p>
+      </div>
+    </div>
+
+    <!-- Suggestion History -->
+    <div class="mt-5">
+      <h5 class="text-success">📋 Suggestion History</h5>
+      <table class="table table-striped table-bordered table-hover mt-2">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>pH</th>
+            <th>Moisture</th>
+            <th>Temp</th>
+            <th>Crop</th>
+          </tr>
+        </thead>
+        <tbody id="historyTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-success text-white text-center py-3 mt-auto">
+    <p class="mb-0">© 2025 AgroAI | Empowering Smart Agriculture 🌾</p>
+    <small>
+      <a href="about.html" class="text-white text-decoration-underline mx-2">About</a>
+      <a href="contact.html" class="text-white text-decoration-underline mx-2">Contact</a>
+    </small>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <!-- Suggestion Logic -->
+  <script>
+    let count = 1;
+
+    function suggestCrop() {
+      const ph = parseFloat(document.getElementById('ph').value);
+      const moisture = parseFloat(document.getElementById('moistureInput').value);
+      const temp = parseFloat(document.getElementById('tempInput').value);
+      const cropEl = document.getElementById("suggestedCrop");
+      const reasonEl = document.getElementById("reasonText");
+
+      cropEl.classList.remove('bg-success', 'bg-warning', 'bg-primary', 'bg-danger', 'animated', 'glow');
+      reasonEl.innerText = "";
+
+      if (isNaN(ph) || isNaN(moisture) || isNaN(temp)) {
+        cropEl.innerText = "Please enter valid inputs";
+        cropEl.classList.add('bg-danger', 'animated');
+        return;
+      }
+
+      let crop = "Check Conditions";
+      let reason = "No optimal match found based on current inputs.";
+      let color = "bg-secondary";
+
+      if (moisture > 60 && temp < 30) {
+        crop = "Rice";
+        reason = "High soil moisture and moderate temperature are ideal for rice.";
+        color = "bg-success";
+      } else if (moisture > 40 && temp <= 32) {
+        crop = "Wheat";
+        reason = "Wheat thrives in moderate moisture and cooler temperatures.";
+        color = "bg-warning";
+      } else if (moisture > 30 && temp < 35) {
+        crop = "Tomato";
+        reason = "Tomatoes prefer warm temperatures and moderate soil moisture.";
+        color = "bg-primary";
+      }
+
+      cropEl.innerText = crop;
+      cropEl.classList.add(color, 'animated', 'glow');
+      reasonEl.innerText = reason;
+
+      updateHistory(ph, moisture, temp, crop);
+
+      // Remove glow after animation
+      setTimeout(() => cropEl.classList.remove('glow'), 1200);
+    }
+
+    function updateHistory(ph, moisture, temp, crop) {
+      const row = `<tr>
+                    <td>${count++}</td>
+                    <td>${ph}</td>
+                    <td>${moisture}</td>
+                    <td>${temp}</td>
+                    <td>${crop}</td>
+                  </tr>`;
+      document.getElementById("historyTable").innerHTML += row;
+    }
+  </script>
+
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
