@@ -3,86 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>📊 AgroAI - Sensor Charts</title>
+  <title>📈 AgroAI - Live Sensor Analytics</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap Icons for footer -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    .glass {
+      background: rgba(255,255,255,0.95);
+      border-radius: 1.2rem;
+      box-shadow: 0 8px 32px rgba(39, 174, 96, 0.10);
+      transition: box-shadow 0.2s;
+    }
+    .glass:hover {
+      box-shadow: 0 12px 40px rgba(39, 174, 96, 0.18);
+    }
+    .card-title {
+      font-size: 1.2rem;
+      letter-spacing: 0.01em;
+    }
+    @media (max-width: 767px) {
+      .card-title {
+        font-size: 1rem;
+      }
+      .glass {
+        padding: 0.7rem 0.3rem;
+      }
+    }
+    .chart-header {
+      background: linear-gradient(90deg, #27ae60 60%, #229954 100%);
+      color: #fff;
+      border-radius: 1rem 1rem 0 0;
+      padding: 1.5rem 1rem 1rem 1rem;
+      box-shadow: 0 4px 24px rgba(39, 174, 96, 0.10);
+      margin-bottom: 2rem;
+    }
+    .chart-header h2 {
+      font-size: 2.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .chart-header p {
+      font-size: 1.1rem;
+      margin-bottom: 0;
+      color: #eafaf1;
+    }
+  </style>
 </head>
 
-<body class="bg-agro d-flex flex-column min-vh-100 text-dark">
+<body class="d-flex flex-column min-vh-100">
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow sticky-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="#">🌾 AgroAI</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto d-flex gap-3">
-          <li class="nav-item"><a class="nav-link" href="index.html">🏠 Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link active" href="chart.html">📈 Charts</a></li>
-          <li class="nav-item"><a class="nav-link" href="suggest.html">🌿 Suggestions</a></li>
-          <li class="nav-item"><a class="nav-link" href="feedback.html">📩 Feedback</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Main Content -->
-  <div class="container py-5 flex-grow-1">
-    <h2 class="text-center mb-4 fw-bold text-success">📊 Live Sensor Charts</h2>
-
-    <!-- Dropdown -->
-    <div class="mb-4 text-center">
-      <label for="dataRange" class="form-label fw-bold">🔍 Select Data Range:</label>
-      <select id="dataRange" class="form-select w-auto mx-auto">
-        <option value="5">Last 5 Entries</option>
-        <option value="10" selected>Last 10 Entries</option>
-        <option value="15">Last 15 Entries</option>
-      </select>
-    </div>
-
-    <div class="row g-4">
-      <!-- Moisture -->
-      <div class="col-md-4">
-        <div class="card glass border-success shadow h-100">
-          <div class="card-body">
-            <h5 class="card-title text-success fw-semibold">🌱 Moisture</h5>
-            <canvas id="moistureChart" height="200"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- Temperature -->
-      <div class="col-md-4">
-        <div class="card glass border-danger shadow h-100">
-          <div class="card-body">
-            <h5 class="card-title text-danger fw-semibold">🌡 Temperature</h5>
-            <canvas id="temperatureChart" height="200"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- TDS -->
-      <div class="col-md-4">
-        <div class="card glass border-primary shadow h-100">
-          <div class="card-body">
-            <h5 class="card-title text-primary fw-semibold">🧪 TDS</h5>
-            <canvas id="tdsChart" height="200"></canvas>
-          </div>
-        </div>
-      </div>
+  <!-- Navbar (use this on ALL pages) -->
+<nav class="navbar navbar-expand-lg navbar-success bg-success navbar-dark shadow sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold fs-4" href="index.html" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Go to Dashboard">
+      🌾 AgroAI
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto d-flex gap-3 align-items-center">
+        <li class="nav-item"><a class="nav-link" href="index.html" id="nav-dashboard">🏠 Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="chart.html" id="nav-charts">📈 Charts</a></li>
+        <li class="nav-item"><a class="nav-link" href="suggest.html" id="nav-suggest">🌿 Suggestions</a></li>
+        <li class="nav-item"><a class="nav-link" href="feedback.html" id="nav-feedback">📩 Feedback</a></li>
+      </ul>
     </div>
   </div>
+</nav>
+
+  <!-- Main Content -->
+  <main class="flex-grow-1">
+    <div class="container py-5 flex-grow-1">
+      <!-- Improved Header -->
+      <div class="text-center mb-5">
+        <h1 class="fw-bold display-5 text-success mb-3" style="letter-spacing:0.02em;">
+          📊 AgroAI Sensor Analytics
+        </h1>
+        <p class="lead text-secondary mb-0" style="max-width:600px;margin:auto;">
+          Get a clear, real-time view of your farm’s <span class="fw-semibold text-success">Soil Moisture</span>, <span class="fw-semibold text-warning">Temperature</span>, and <span class="fw-semibold text-primary">TDS</span> levels. Use these insights to make smarter, data-driven decisions for your crops.
+        </p>
+      </div>
+
+      <!-- Chart Cards -->
+      <div class="row g-4">
+        <!-- Moisture Chart -->
+        <div class="col-12 col-lg-4">
+          <div class="card border-0 shadow h-100">
+            <div class="card-header bg-success text-white d-flex align-items-center justify-content-between rounded-top">
+              <span>
+                <i class="bi bi-droplet-half me-2"></i>Soil Moisture Trend
+              </span>
+              <button class="btn btn-light btn-sm" onclick="downloadChart('moistureChart')" title="Download as Image">
+                <i class="bi bi-download"></i>
+              </button>
+            </div>
+            <div class="card-body bg-white rounded-bottom">
+              <canvas id="moistureChart" height="260" style="border-radius:14px; box-shadow:0 2px 12px rgba(39,174,96,0.10);"></canvas>
+            </div>
+          </div>
+        </div>
+        <!-- Temperature Chart -->
+        <div class="col-12 col-lg-4">
+          <div class="card border-0 shadow h-100">
+            <div class="card-header bg-warning text-white d-flex align-items-center justify-content-between rounded-top">
+              <span>
+                <i class="bi bi-thermometer-half me-2"></i>Temperature Variation
+              </span>
+              <button class="btn btn-light btn-sm" onclick="downloadChart('temperatureChart')" title="Download as Image">
+                <i class="bi bi-download"></i>
+              </button>
+            </div>
+            <div class="card-body bg-white rounded-bottom">
+              <canvas id="temperatureChart" height="260" style="border-radius:14px; box-shadow:0 2px 12px rgba(230,126,34,0.10);"></canvas>
+            </div>
+          </div>
+        </div>
+        <!-- TDS Chart -->
+        <div class="col-12 col-lg-4">
+          <div class="card border-0 shadow h-100">
+            <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between rounded-top">
+              <span>
+                <i class="bi bi-beaker me-2"></i>TDS Levels
+              </span>
+              <button class="btn btn-light btn-sm" onclick="downloadChart('tdsChart')" title="Download as Image">
+                <i class="bi bi-download"></i>
+              </button>
+            </div>
+            <div class="card-body bg-white rounded-bottom">
+              <canvas id="tdsChart" height="260" style="border-radius:14px; box-shadow:0 2px 12px rgba(41,128,185,0.10);"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
   <!-- Footer -->
-  <footer class="bg-success text-white text-center py-3 mt-auto">
-    <div class="container">
-      <p class="mb-0">© 2025 AgroAI | Smart Agriculture Dashboard 🌿</p>
+  <footer class="bg-success text-white mt-5 pt-4 pb-2 shadow-lg">
+    <div class="container text-center">
+      <h5 class="fw-bold mb-2">AgroAI</h5>
+      <p class="mb-2">Empowering sustainable agriculture with smart technology.</p>
+      <div class="mb-3">
+        <a href="mailto:contact@agroai.com" class="text-white me-3 text-decoration-none">
+          <i class="bi bi-envelope-fill"></i> contact@agroai.com
+        </a>
+        <a href="https://twitter.com/" target="_blank" class="text-white me-3 text-decoration-none">
+          <i class="bi bi-twitter"></i>
+        </a>
+        <a href="https://facebook.com/" target="_blank" class="text-white me-3 text-decoration-none">
+          <i class="bi bi-facebook"></i>
+        </a>
+        <a href="https://instagram.com/" target="_blank" class="text-white text-decoration-none">
+          <i class="bi bi-instagram"></i>
+        </a>
+      </div>
+      <div class="small">
+        &copy; 2025 AgroAI. Made with <span style="color:#ffb3b3;">&#10084;</span> for farmers.
+      </div>
     </div>
   </footer>
 
@@ -94,5 +178,14 @@
 
   <!-- Bootstrap Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function downloadChart(chartId) {
+      const chart = document.getElementById(chartId);
+      const link = document.createElement('a');
+      link.href = chart.toDataURL('image/png');
+      link.download = chartId + '.png';
+      link.click();
+    }
+  </script>
 </body>
 </html>

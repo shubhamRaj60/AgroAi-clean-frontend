@@ -49,14 +49,56 @@ function createLineChart(ctx, label, borderColor, backgroundColor, yMax) {
   });
 }
 
+const chartColors = {
+  moisture: "#27ae60",
+  temperature: "#e67e22",
+  tds: "#2980b9"
+};
+
 // Initialize Charts
-const moistureChart = createLineChart(
-  document.getElementById('moistureChart').getContext('2d'),
-  'Soil Moisture (%)',
-  'green',
-  'rgba(39, 174, 96, 0.2)',
-  100
-);
+const moistureChart = new Chart(document.getElementById('moistureChart'), {
+  type: 'line',
+  data: {
+    labels: [], // your labels
+    datasets: [{
+      label: 'Soil Moisture (%)',
+      data: [], // your data
+      borderColor: "#27ae60",
+      backgroundColor: "rgba(39,174,96,0.08)",
+      pointBackgroundColor: "#27ae60",
+      tension: 0.4,
+      borderWidth: 3,
+      pointRadius: 5,
+      fill: true,
+      pointStyle: 'circle'
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        labels: { color: '#229954', font: { weight: 'bold' } }
+      },
+      tooltip: {
+        backgroundColor: '#229954',
+        titleColor: '#fff',
+        bodyColor: '#fff'
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#229954' },
+        grid: { color: '#eafaf1' }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { color: '#229954' },
+        grid: { color: '#eafaf1' }
+      }
+    }
+  }
+});
 
 const tempChart = createLineChart(
   document.getElementById('temperatureChart').getContext('2d'),
@@ -114,3 +156,11 @@ db.ref('/AgroAI/TDS').on('value', snapshot => {
   const val = snapshot.val();
   if (!isNaN(val)) updateChart(tdsChart, val);
 });
+
+function downloadChart(chartId) {
+  const chart = document.getElementById(chartId);
+  const link = document.createElement('a');
+  link.href = chart.toDataURL('image/png');
+  link.download = chartId + '.png';
+  link.click();
+}
