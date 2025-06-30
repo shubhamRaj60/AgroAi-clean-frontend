@@ -80,7 +80,7 @@ manualForm?.addEventListener("submit", async function (e) {
 
   // ✅ Call server
   try {
-    const response = await fetch("/predict", {
+    const response = await fetch("https://agroai-backend-ewof.onrender.com/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ N, P, K, temperature, humidity: moisture, ph, rainfall: tds })

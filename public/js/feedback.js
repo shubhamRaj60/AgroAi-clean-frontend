@@ -1,6 +1,6 @@
-// Submit feedback to backend with optional screenshot
 const form = document.getElementById("feedbackForm");
 
+// Submit feedback to backend with optional screenshot
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -37,7 +37,7 @@ form.addEventListener("submit", async function (e) {
 
     const data = await res.json();
 
-    if (data.success) {
+    if (res.ok && data.success) {
       Swal.fire({
         icon: "success",
         title: "Feedback Submitted!",
@@ -47,7 +47,7 @@ form.addEventListener("submit", async function (e) {
       form.reset();
       document.getElementById("star-value").innerText = "You selected: 0/5";
     } else {
-      throw new Error("Failed to submit feedback");
+      throw new Error(data.message || "Failed to submit feedback");
     }
   } catch (error) {
     console.error("Submit error:", error);
