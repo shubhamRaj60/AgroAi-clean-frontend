@@ -1,0 +1,98 @@
+/* Feedback container */
+.feedback-container {
+  max-width: 540px;
+  margin: 3rem auto 2rem auto;
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px rgba(39, 174, 96, 0.10);
+  padding: 2.5rem 2rem 2rem 2rem;
+}
+
+@media (max-width: 600px) {
+  .feedback-container {
+    padding: 1.2rem 0.7rem 1rem 0.7rem;
+    margin: 1.2rem 0.3rem;
+  }
+}
+
+/* Form labels and controls */
+.form-label {
+  font-weight: 600;
+  color: #229954;
+  letter-spacing: 0.01em;
+}
+.form-control {
+  border-radius: 0.8rem;
+  border: 1.5px solid #b2dfdb;
+  font-size: 1.07rem;
+  box-shadow: 0 1px 4px rgba(39, 174, 96, 0.04);
+  transition: border-color 0.2s;
+}
+.form-control:focus {
+  border-color: #229954;
+  box-shadow: 0 0 0 0.15rem rgba(39, 174, 96, 0.13);
+}
+
+/* Submit button */
+.btn-submit {
+  background: linear-gradient(90deg, #27ae60 60%, #229954 100%);
+  border: none;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1.13rem;
+  padding: 0.7rem 2.2rem;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.10);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-submit:hover, .btn-submit:focus {
+  background: linear-gradient(90deg, #229954 60%, #27ae60 100%);
+  box-shadow: 0 4px 16px rgba(39, 174, 96, 0.18);
+  color: #fff;
+}
+
+/* Star rating */
+.star-rating {
+  direction: rtl;
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.2em;
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+.star-rating input[type="radio"] {
+  display: none;
+}
+.star-rating label {
+  color: #b2dfdb;
+  cursor: pointer;
+  transition: color 0.2s;
+  user-select: none;
+}
+.star-rating input[type="radio"]:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #ffc107;
+}
+
+/* Star value text */
+#star-value {
+  font-size: 1rem;
+  color: #229954;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+/* Toast styles (optional, for feedback) */
+.toast-success {
+  background-color: #27ae60 !important;
+  color: #fff !important;
+}
+
+/* Responsive tweaks */
+@media (max-width: 400px) {
+  .btn-submit {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
