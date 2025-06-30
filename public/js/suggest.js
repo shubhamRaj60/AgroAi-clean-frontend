@@ -1,10 +1,10 @@
 const db = window.db;
 
 // DOM references
-const moistureEl = document.getElementById('moisture');
+const humidityEl = document.getElementById('moisture');
 const tempEl = document.getElementById('temperature');
-const tdsEl = document.getElementById('tds');
-const regionEl = document.getElementById('region');
+const rainfallEl = document.getElementById('tds');
+const regionEl = document.getElementById('region'); // used only for display
 const predictBtn = document.getElementById('predictBtn');
 const resultBox = document.getElementById('predictionResult');
 const spinner = document.getElementById('loadingSpinner');
@@ -13,7 +13,7 @@ const manualForm = document.getElementById('manualForm');
 // --- 1. Live Sensor Data from Firebase ---
 db.ref('/AgroAI/Moisture').on('value', (snapshot) => {
   const val = snapshot.val();
-  if (moistureEl) moistureEl.textContent = (val !== null && val !== undefined) ? val : '--';
+  if (humidityEl) humidityEl.textContent = (val !== null && val !== undefined) ? val : '--';
 });
 db.ref('/AgroAI/Temperature').on('value', (snapshot) => {
   const val = snapshot.val();
@@ -21,29 +21,30 @@ db.ref('/AgroAI/Temperature').on('value', (snapshot) => {
 });
 db.ref('/AgroAI/TDS').on('value', (snapshot) => {
   const val = snapshot.val();
-  if (tdsEl) tdsEl.textContent = (val !== null && val !== undefined) ? val : '--';
+  if (rainfallEl) rainfallEl.textContent = (val !== null && val !== undefined) ? val : '--';
 });
 
-// --- 2. Predict Button (using live data) ---
+// --- 2. Predict Button (using live data only for display/demo) ---
 predictBtn?.addEventListener('click', () => {
   const region = regionEl.value;
-  const moisture = moistureEl.textContent;
+  const humidity = humidityEl.textContent;
   const temperature = tempEl.textContent;
-  const tds = tdsEl.textContent;
+  const rainfall = rainfallEl.textContent;
 
   if (!region) {
     showResult('Please select a region.', true);
     return;
   }
+
   showSpinner(true);
   setTimeout(() => {
     showSpinner(false);
-    showResult(`Best crop for ${region} (Moisture: ${moisture}, Temp: ${temperature}°C, TDS: ${tds}) is <b>Wheat</b>.`);
+    // Fake crop for demo, you can change it
+    showResult(`Best crop for ${region} (Humidity: ${humidity}%, Temp: ${temperature}°C, Rainfall: ${rainfall}mm) is <b>Wheat</b>.`);
   }, 1200);
 });
 
 // --- 3. Manual Prediction Form ---
-// ✅ Predict Crop Using Manual Input (with validation and async/await)
 manualForm?.addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -51,18 +52,18 @@ manualForm?.addEventListener("submit", async function (e) {
   const P = parseFloat(document.getElementById("manualP").value);
   const K = parseFloat(document.getElementById("manualK").value);
   const temperature = parseFloat(document.getElementById("manualTemperature").value);
-  const moisture = parseFloat(document.getElementById("manualMoisture").value);
-  const tds = parseFloat(document.getElementById("manualTDS").value);
+  const humidity = parseFloat(document.getElementById("manualHumidity").value);  // ✅ Corrected
+  const rainfall = parseFloat(document.getElementById("manualRainfall").value);  // ✅ Corrected
   const ph = parseFloat(document.getElementById("manualPH").value);
-  const region = document.getElementById("manualRegion").value;
+  // region is not used in prediction — only for display if needed
 
   // ✅ Validate ranges
   if (ph < 0 || ph > 14) {
     alert("❌ Soil pH must be between 0 and 14.");
     return;
   }
-  if (moisture < 0 || moisture > 100) {
-    alert("❌ Moisture should be between 0% and 100%.");
+  if (humidity < 0 || humidity > 100) {
+    alert("❌ Humidity should be between 0% and 100%.");
     return;
   }
   if (temperature < -10 || temperature > 60) {
@@ -78,33 +79,30 @@ manualForm?.addEventListener("submit", async function (e) {
   resultBox.classList.add("d-none");
   spinner.classList.remove("d-none");
 
-  // ✅ Call server
+  // ✅ Call server with correct payload
   try {
     const response = await fetch("https://agroai-backend-ewof.onrender.com/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ N, P, K, temperature, humidity: moisture, ph, rainfall: tds })
+      body: JSON.stringify({ N, P, K, temperature, humidity, ph, rainfall }) // ✅ Final correct structure
     });
     const data = await response.json();
     spinner.classList.add("d-none");
 
     if (data.prediction) {
       resultBox.textContent = `✅ Suggested Crop: ${data.prediction}`;
-      resultBox.classList.remove("d-none");
-      resultBox.classList.remove('alert-danger');
-      resultBox.classList.add('alert-primary');
+      resultBox.classList.remove("d-none", "alert-danger");
+      resultBox.classList.add("alert-primary");
     } else {
       resultBox.textContent = "❌ Prediction failed. Try again.";
-      resultBox.classList.remove("d-none");
-      resultBox.classList.remove('alert-primary');
-      resultBox.classList.add('alert-danger');
+      resultBox.classList.remove("d-none", "alert-primary");
+      resultBox.classList.add("alert-danger");
     }
   } catch (error) {
     spinner.classList.add("d-none");
     resultBox.textContent = "❌ Server error.";
-    resultBox.classList.remove("d-none");
-    resultBox.classList.remove('alert-primary');
-    resultBox.classList.add('alert-danger');
+    resultBox.classList.remove("d-none", "alert-primary");
+    resultBox.classList.add("alert-danger");
     console.error("Prediction error:", error);
   }
 });

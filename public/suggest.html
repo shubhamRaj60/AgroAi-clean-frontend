@@ -79,44 +79,51 @@
         <h4 class="card-title"><span class="material-icons align-middle">edit</span> Manual Prediction (Optional)</h4>
         <form id="manualForm" autocomplete="on">
           <!-- Added N, P, K, pH fields here -->
-          <div class="mb-3">
-            <label for="manualN" class="form-label">Nitrogen (N)</label>
-            <input type="number" class="form-control" id="manualN" name="N" required>
-          </div>
-          <div class="mb-3">
-            <label for="manualP" class="form-label">Phosphorus (P)</label>
-            <input type="number" class="form-control" id="manualP" name="P" required>
-          </div>
-          <div class="mb-3">
-            <label for="manualK" class="form-label">Potassium (K)</label>
-            <input type="number" class="form-control" id="manualK" name="K" required>
-          </div>
-          <div class="mb-3">
-            <label for="manualPH" class="form-label">Soil pH</label>
-            <input type="number" step="0.1" class="form-control" id="manualPH" name="ph" required>
-          </div>
-          <div class="mb-3">
-            <label for="manualMoisture" class="form-label">Soil Moisture (%)</label>
-            <input type="number" step="0.1" class="form-control" id="manualMoisture" name="moisture" autocomplete="moisture" required>
-          </div>
-          <div class="mb-3">
-            <label for="manualTemperature" class="form-label">Temperature (°C)</label>
-            <input type="number" step="0.1" class="form-control" id="manualTemperature" name="temperature" autocomplete="temperature" required>
-          </div>
-          <div class="mb-3">
-            <label for="manualTDS" class="form-label">TDS Level (ppm)</label>
-            <input type="number" step="1" class="form-control" id="manualTDS" name="tds" autocomplete="tds" required>
-          </div>
-          <div class="mb-3">
-            <label for="manualRegion" class="form-label">Region</label>
-            <select class="form-select" id="manualRegion" name="region" autocomplete="region" required>
-              <option value="">Select Region</option>
-              <option value="East India">East India</option>
-              <option value="West India">West India</option>
-              <option value="North India">North India</option>
-              <option value="South India">South India</option>
-            </select>
-          </div>
+         <div class="mb-3">
+  <label for="manualN" class="form-label">Nitrogen (N)</label>
+  <input type="number" class="form-control" id="manualN" name="N" required>
+</div>
+
+<div class="mb-3">
+  <label for="manualP" class="form-label">Phosphorus (P)</label>
+  <input type="number" class="form-control" id="manualP" name="P" required>
+</div>
+
+<div class="mb-3">
+  <label for="manualK" class="form-label">Potassium (K)</label>
+  <input type="number" class="form-control" id="manualK" name="K" required>
+</div>
+
+<div class="mb-3">
+  <label for="manualPH" class="form-label">Soil pH</label>
+  <input type="number" step="0.1" class="form-control" id="manualPH" name="ph" required>
+</div>
+
+<div class="mb-3">
+  <label for="manualHumidity" class="form-label">Humidity (%)</label>
+  <input type="number" step="0.1" class="form-control" id="manualHumidity" name="humidity" required>
+</div>
+
+<div class="mb-3">
+  <label for="manualTemperature" class="form-label">Temperature (°C)</label>
+  <input type="number" step="0.1" class="form-control" id="manualTemperature" name="temperature" required>
+</div>
+
+<div class="mb-3">
+  <label for="manualRainfall" class="form-label">Rainfall (mm)</label>
+  <input type="number" step="1" class="form-control" id="manualRainfall" name="rainfall" required>
+</div>
+
+<div class="mb-3">
+  <label for="manualRegion" class="form-label">Region</label>
+  <select class="form-select" id="manualRegion" name="region" required>
+    <option value="">Select Region</option>
+    <option value="East India">East India</option>
+    <option value="West India">West India</option>
+    <option value="North India">North India</option>
+    <option value="South India">South India</option>
+  </select>
+</div>
           <button type="submit" class="btn btn-primary w-100">📊 Predict Manually</button>
         </form>
       </div>
