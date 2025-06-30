@@ -1,82 +1,69 @@
-// Initialize Firebase (make sure firebase-config.js is included before this script)
-const db = firebase.database();
+const form = document.getElementById("feedbackForm");
 
-document.getElementById("feedbackForm").addEventListener("submit", function (e) {
+// Submit feedback to backend with optional screenshot
+form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const name = document.getElementById("userName").value.trim();
-  const email = document.getElementById("userEmail").value.trim();
-  const message = document.getElementById("userMessage").value.trim();
-  const statusText = document.getElementById("statusMessage");
-  const submitBtn = document.getElementById("submitBtn");
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const subject = document.getElementById("subject").value.trim();
+  const message = document.getElementById("message").value.trim();
+  const screenshot = document.getElementById("screenshot").files[0];
+  const stars = document.querySelector("input[name='stars']:checked")?.value || "";
 
-  // Validate inputs
-  if (!name || !email || !message) {
+  if (!name || !message) {
     Swal.fire({
       icon: "warning",
-      title: "Incomplete Fields",
-      text: "Please fill in all the fields.",
+      title: "Missing Required Fields",
+      text: "Please fill in your name and message.",
       confirmButtonColor: "#28a745"
     });
     return;
   }
 
-  if (!validateEmail(email)) {
-    Swal.fire({
-      icon: "error",
-      title: "Invalid Email",
-      text: "Please enter a valid email address.",
-      confirmButtonColor: "#dc3545"
-    });
-    return;
-  }
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("email", email);
+  formData.append("subject", subject);
+  formData.append("message", message);
+  formData.append("stars", stars);
+  if (screenshot) formData.append("screenshot", screenshot);
 
-  // Disable button during submission
-  submitBtn.disabled = true;
-  submitBtn.innerText = "Sending...";
-
-  // Push to Firebase
-  db.ref("feedbacks").push({
-    name,
-    email,
-    message,
-    timestamp: new Date().toISOString()
-  })
-  .then(() => {
-    Swal.fire({
-      icon: "success",
-      title: "Feedback Submitted!",
-      text: "Thank you for your valuable feedback 💚",
-      confirmButtonColor: "#28a745"
+  try {
+    const res = await fetch("https://agroai-backend-ewof.onrender.com/api/feedback", {
+      method: "POST",
+      body: formData
     });
 
-    // Reset form
-    document.getElementById("feedbackForm").reset();
-    submitBtn.innerText = "Submit Feedback";
-    submitBtn.disabled = false;
-    statusText.innerHTML = `<span class="text-success">✔️ Feedback received!</span>`;
-  })
-  .catch((error) => {
-    console.error("Firebase Error:", error);
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      Swal.fire({
+        icon: "success",
+        title: "Feedback Submitted!",
+        text: "Thank you for your valuable feedback 💚",
+        confirmButtonColor: "#28a745"
+      });
+      form.reset();
+      document.getElementById("star-value").innerText = "You selected: 0/5";
+    } else {
+      throw new Error(data.message || "Failed to submit feedback");
+    }
+  } catch (error) {
+    console.error("Submit error:", error);
     Swal.fire({
       icon: "error",
       title: "Oops!",
       text: "Something went wrong. Please try again.",
       confirmButtonColor: "#dc3545"
     });
-
-    submitBtn.innerText = "Submit Feedback";
-    submitBtn.disabled = false;
-  });
+  }
 });
 
-function validateEmail(email) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email);
-}
-
-// Tooltip initialization script
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl);
+// Update star value display
+document.querySelectorAll("input[name='stars']").forEach((input) => {
+  input.addEventListener("change", () => {
+    const value = input.value;
+    document.getElementById("star-value").innerText = `You selected: ${value}/5`;
+  });
 });
